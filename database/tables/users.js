@@ -9,11 +9,6 @@ module.exports = {
       using: 'BTREE',
       unique: true,
     });
-    queryInterface.addIndex('users', [ 'user_id' ], {
-      name: 'idx_user_id',
-      using: 'BTREE',
-      unique: true,
-    });
   },
   options: {
     // don't forget to enable timestamps!
@@ -30,12 +25,6 @@ module.exports = {
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
-    },
-    userId: {
-      type: STRING(32),
-      defaultValue: null,
-      field: 'user_id',
-      comment: '用户编号',
     },
     nickName: {
       type: STRING(64),

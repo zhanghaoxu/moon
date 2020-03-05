@@ -29,7 +29,7 @@ class UsersService extends Service {
       const user = await this.findOne({
         wxOpenId: openid,
       });
-
+      console.log('user:', user);
       if (user) {
         this.app.redis.set(`moon:user:isRegister:${openid}`, JSON.stringify(user));
         return user;

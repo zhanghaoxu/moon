@@ -17,4 +17,9 @@ module.exports = app => {
   router.post('/auth/login', controller.auth.login);
 
   router.post('/my/info', authCheck, controller.user.my);
+
+  router.post('/todos/all', authCheck, controller.todos.findAll);
+  router.post('/todos/finished', authCheck, controller.todos.findFinished);
+  router.post('/todos/unFinished', authCheck, controller.todos.findUnFinished);
+  router.post('/todos/add', authCheck, controller.todos.add);
 };

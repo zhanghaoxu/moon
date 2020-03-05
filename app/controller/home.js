@@ -7,8 +7,6 @@ class HomeController extends Controller {
 
     const user = await ctx.service.users.create({
       wxOpenId: 2,
-      userId: 3,
-
       avatarUrl: 'https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eobia9YZZcoJQCdY32kKquQFVPM6U5ibJDjzQ0IaE0jnaC6Iosian3TvsIYAiaRQRl0Lz3l3c3fbY5fbA/132',
       city: 'Weifang',
       country: 'China',

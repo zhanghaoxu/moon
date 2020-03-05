@@ -81,7 +81,9 @@ class AuthController extends Controller {
     // code 换取openid session_key
     const { openid, session_key } = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
     // 已注册
-    if (this.ctx.service.users.findUserByOpenId(openid)) {
+    const _user = await this.ctx.service.users.findUserByOpenId(openid);
+    console.log('111', _user);
+    if (_user) {
       this.ctx.body = {
         code: -1,
         msg: '用户已注册',
@@ -100,7 +102,6 @@ class AuthController extends Controller {
     // 插入用户表
     const user = await this.ctx.service.users.create(Object.assign({}, userInfo, {
       wxOpenId: openid,
-      userId: 'lsdkjflasdjfljfd',
     }));
     // 生成session
     const key = await this.ctx.service.auth.createSession(user);
