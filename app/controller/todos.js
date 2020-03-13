@@ -4,7 +4,7 @@ const Controller = require('egg').Controller;
 class TodosController extends Controller {
   async findAll() {
     const { ctx } = this;
-    const userId = ctx.sessionValue.user.id;
+    const userId = ctx.sessionValue.user.userId;
     const todosAll = await ctx.service.todos.findAll(userId);
 
     ctx.body = {
@@ -16,7 +16,7 @@ class TodosController extends Controller {
 
   async findUnFinished() {
     const { ctx } = this;
-    const userId = ctx.sessionValue.user.id;
+    const userId = ctx.sessionValue.user.userId;
     const todos = await ctx.service.todos.findUserTodosUnfinished(userId);
     ctx.body = {
       code: 200,
@@ -27,7 +27,7 @@ class TodosController extends Controller {
 
   async findFinished() {
     const { ctx } = this;
-    const userId = ctx.sessionValue.user.id;
+    const userId = ctx.sessionValue.user.userId;
     const todos = await ctx.service.todos.findUserTodosFinished(userId);
     ctx.body = {
       code: 200,
@@ -38,7 +38,7 @@ class TodosController extends Controller {
 
   async finishTodo() {
     const { ctx } = this;
-    const userId = ctx.sessionValue.user.id;
+    const userId = ctx.sessionValue.user.userId;
     const todoId = ctx.request.body.todoId;
 
     if (!todoId) {
@@ -76,7 +76,7 @@ class TodosController extends Controller {
       this.ctx.body = getErrorResponseInfo(PARAM_INVALID_FAIL_CODE);
       return;
     }
-    const userId = ctx.sessionValue.user.id;
+    const userId = ctx.sessionValue.user.userId;
     const result = await ctx.service.todos.create({ name, userId });
 
     ctx.body = {

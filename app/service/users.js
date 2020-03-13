@@ -1,6 +1,7 @@
 'use strict';
 // app/service/users.js
 const Service = require('egg').Service;
+const { simpleflake } = require('simpleflakes');
 class UsersService extends Service {
 
   async create(user) {
@@ -71,6 +72,11 @@ class UsersService extends Service {
       force: false,
     });
     return result;
+  }
+
+  generateOrderIdForUser() {
+    const flakeBigInt = simpleflake();
+    return flakeBigInt.toString();
   }
 
   async restore(user) {
