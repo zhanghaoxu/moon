@@ -99,6 +99,9 @@ class AuthController extends Controller {
         msg: '用户信息签名错误',
       };
     }
+
+    // 通过雪花算法 为用户生成唯一userId 方便以后进行数据库扩展
+    userInfo.userId = this.ctx.service.users.generateOrderIdForUser();
     // 插入用户表
     const user = await this.ctx.service.users.create(Object.assign({}, userInfo, {
       wxOpenId: openid,
