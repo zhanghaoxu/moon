@@ -19,6 +19,7 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
+    "cross-env": "^7.0.2",
     "egg-bin": "^4.11.0",
     "egg-ci": "^1.11.0",
     "egg-mock": "^3.21.0",
@@ -35,6 +36,7 @@
     "start": "egg-scripts start --daemon --title=egg-server-moon",
     "stop": "egg-scripts stop --title=egg-server-moon",
     "dev": "egg-bin dev",
+    "local": "cross-env EGG_NODE_ENV=local && npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
