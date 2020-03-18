@@ -1,7 +1,10 @@
 'use strict';
 
 /** @type Egg.EggPlugin */
-
+exports.alinode = {
+  enable: true,
+  package: 'egg-alinode',
+};
 exports.sequelize = {
   enable: true,
   package: 'egg-sequelize',

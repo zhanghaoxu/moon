@@ -16,7 +16,11 @@ const DEV_REDIS_DB = 1;
 
 module.exports = {
   sequelize: prodServerMysqlConfig,
-
+  alinode: {
+    // 从 `Node.js 性能平台` 获取对应的接入参数
+    appid: '84075',
+    secret: 'e2e9076e2bad0bf877f0b3c8ce8124dbc4857eb2',
+  },
   mysql: {
     // 单数据库信息配置
     client: {
