@@ -9,10 +9,10 @@
     "operatorsAliases": 0
   },
   "dev-server": {
-    "username": "user",
-    "password": "xuxuxu123",
+    "username": "root",
+    "password": "Xuxuxu321",
     "database": "moon",
-    "host": "207.246.127.110",
+    "host": "192.168.180.1",
     "port":"3306",
     "dialect": "mysql",
     "operatorsAliases": 0

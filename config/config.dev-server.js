@@ -10,7 +10,7 @@ const devServerMysqlConfig = require('../database/config.json')['dev-server'];
 // host: '10.177.0.81', // Redis host
 // password: 'ujbT3k3M4bW8LMTa',
 const DEV_REDIS_PORT = '6379';
-const DEV_REDIS_HOST = '127.0.0.1';
+const DEV_REDIS_HOST = '192.168.180.1';
 const DEV_REDIS_PASSWORD = '';
 const DEV_REDIS_DB = 1;
 
