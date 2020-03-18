@@ -7,7 +7,7 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  "development": {
+  "dev-server": {
     "username": "user",
     "password": "xuxuxu123",
     "database": "moon",
@@ -15,10 +15,34 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  "test": {
+  "test-server": {
+    "username": "user",
+    "password": "xuxuxu123",
+    "database": "moon",
+    "host": "207.246.127.110",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "pre-server": {
+    "username": "user",
+    "password": "xuxuxu123",
+    "database": "moon",
+    "host": "207.246.127.110",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "prod-server": {
+    "username": "user",
+    "password": "xuxuxu123",
+    "database": "moon",
+    "host": "207.246.127.110",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "development": {
     "username": "root",
-    "password": null,
-    "database": "database_test",
+    "password": "Xuxuxu321",
+    "database": "moon",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

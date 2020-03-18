@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 
-RUN npm i
+#RUN npm i
 
 RUN npm i --registry=https://registry.npm.taobao.org
 
@@ -20,4 +20,5 @@ COPY . /usr/src/app
 
 EXPOSE 7001
 
-CMD EGG_NODE_ENV=dev npm run start
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["start"]

@@ -18,14 +18,6 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [];
 
-  config.sequelize = {
-    dialect: 'mysql',
-    host: '207.246.127.110',
-    port: '3306',
-    user: 'user',
-    password: 'xuxuxu123',
-    database: 'moon',
-  };
 
   config.security = {
     csrf: {
@@ -39,8 +31,7 @@ module.exports = appInfo => {
 
   // add your user config here
   const userConfig = {
-    appId: 'wxa951e094896c9b56',
-    appSecret: '259c84973e2ce4d217790fa1ad0d48d7',
+
   };
 
 

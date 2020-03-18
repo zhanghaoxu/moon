@@ -2,11 +2,7 @@
 
 'use strict';
 // mysql setting
-const LOCAL_MYSQL_HOST = '127.0.0.1';
-const LOCAL_MYSQL_PORT = 3306;
-const LOCAL_MYSQL_USER = 'root';
-const LOCAL_MYSQL_PASSWORD = 'Xuxuxu321';
-const LOCAL_MYSQL_DATABASE = 'moon';
+const localMysqlConfig = require('../database/config.json').local;
 // redis setting
 // host: '10.177.0.81', // Redis host
 // password: 'ujbT3k3M4bW8LMTa',
@@ -20,29 +16,20 @@ const LOCAL_REDIS_DB = 1;
  */
 module.exports = {
 
-  sequelize: {
-    dialect: 'mysql',
-    host: LOCAL_MYSQL_HOST,
-    port: LOCAL_MYSQL_PORT,
-    database: LOCAL_MYSQL_DATABASE,
-    // 用户名
-    username: LOCAL_MYSQL_USER,
-    // 密码
-    password: LOCAL_MYSQL_PASSWORD,
-  },
+  sequelize: localMysqlConfig,
   mysql: {
     // 单数据库信息配置
     client: {
       // host
-      host: LOCAL_MYSQL_HOST,
+      host: localMysqlConfig.host,
       // 端口号
-      port: LOCAL_MYSQL_PORT,
+      port: localMysqlConfig.port,
       // 用户名
-      user: LOCAL_MYSQL_USER,
+      user: localMysqlConfig.username,
       // 密码
-      password: LOCAL_MYSQL_PASSWORD,
+      password: localMysqlConfig.password,
       // 数据库名
-      database: LOCAL_MYSQL_DATABASE,
+      database: localMysqlConfig.database,
     },
     // 是否加载到 app 上，默认开启
     app: true,
