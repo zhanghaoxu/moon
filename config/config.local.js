@@ -35,8 +35,6 @@ module.exports = appInfo => {
     dialect: 'mysql',
     host: LOCAL_MYSQL_HOST,
     port: LOCAL_MYSQL_PORT,
-    user: LOCAL_MYSQL_USER,
-    password: LOCAL_MYSQL_PASSWORD,
     database: LOCAL_MYSQL_DATABASE,
   };
   config.mysql = {
