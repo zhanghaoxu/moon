@@ -11,7 +11,7 @@ const prodServerMysqlConfig = require('../database/config.json')['prod-server'];
 // password: 'ujbT3k3M4bW8LMTa',
 const DEV_REDIS_PORT = '6379';
 const DEV_REDIS_HOST = '207.246.127.110';
-const DEV_REDIS_PASSWORD = 'xuxuxu123';
+const DEV_REDIS_PASSWORD = '';
 const DEV_REDIS_DB = 1;
 
 module.exports = {
