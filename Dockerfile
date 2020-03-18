@@ -15,9 +15,9 @@ COPY package.json /usr/src/app/
 
 RUN npm i --registry=https://registry.npm.taobao.org
 #alinode支持
-RUN npm i nodeinstall \
-    && nodeinstall --install-alinode ^3 
-    
+RUN npm i nodeinstall 
+RUN nodeinstall --install-alinode ^3 
+
 COPY . /usr/src/app
 
 EXPOSE 7001
