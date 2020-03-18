@@ -2,11 +2,10 @@ FROM node:8.11.3-alpine
 
 ENV TIME_ZONE=Asia/Shanghai
 
-RUN \
-  mkdir -p /usr/src/app \
-  && apk add --no-cache tzdata \
-  && echo "${TIME_ZONE}" > /etc/timezone \ 
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime 
+RUN apk --update add tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata
 
 WORKDIR /usr/src/app
 
