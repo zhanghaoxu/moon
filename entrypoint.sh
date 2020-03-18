@@ -14,20 +14,20 @@ case "$CMD" in
 
     export EGG_SERVER_ENV=dev-server
     export NODE_ENV=production
-    exec npm start-in-docker
+    exec npm run start-in-docker
     ;;
 
   "test-server" )
 
     export EGG_SERVER_ENV=test-server
     export NODE_ENV=production
-    exec npm start-in-docker
+    exec npm run start-in-docker
     ;;
 
   "pre-server" )
     export EGG_SERVER_ENV=pre-server
     export NODE_ENV=production
-    exec npm start-in-docker
+    exec npm run start-in-docker
     ;;
 
   "prod-server" )
@@ -35,7 +35,7 @@ case "$CMD" in
     # "docker create" command. It can't be done during build process.
     export EGG_SERVER_ENV=prod-server
     export NODE_ENV=production
-    exec npm start-in-docker
+    exec npm run start-in-docker
     ;;
 
 esac
