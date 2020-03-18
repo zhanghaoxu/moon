@@ -33,6 +33,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
+    "start-in-docker": "egg-scripts start --title=egg-server-moon",
     "start": "egg-scripts start --daemon --title=egg-server-moon",
     "stop": "egg-scripts stop --title=egg-server-moon",  
     "dev": "egg-bin dev",
