@@ -1,7 +1,6 @@
 'use strict';
 module.exports = options => {
   return async function authCheck(ctx, next) {
-
     // 后续中间件执行完成后将响应体转换成 gzip
 
     const sessionHashKey = ctx.request.header['moon-session'];

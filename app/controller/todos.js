@@ -4,6 +4,7 @@ const Controller = require('egg').Controller;
 class TodosController extends Controller {
   async findAll() {
     const { ctx } = this;
+
     const userId = ctx.sessionValue.user.userId;
     const todosAll = await ctx.service.todos.findAll(userId);
 

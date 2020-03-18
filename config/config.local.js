@@ -18,26 +18,19 @@ const LOCAL_REDIS_DB = 1;
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
-module.exports = appInfo => {
-  /**
-   * built-in config
-   * @type {Egg.EggAppConfig}
-   **/
-  const config = exports = {};
+module.exports = {
 
-  // use for cookie sign key, should change to your own and keep security
-  config.keys = appInfo.name + '_1572170966833_711';
-
-  // add your middleware config here
-  config.middleware = [];
-
-  config.sequelize = {
+  sequelize: {
     dialect: 'mysql',
     host: LOCAL_MYSQL_HOST,
     port: LOCAL_MYSQL_PORT,
     database: LOCAL_MYSQL_DATABASE,
-  };
-  config.mysql = {
+    // 用户名
+    username: LOCAL_MYSQL_USER,
+    // 密码
+    password: LOCAL_MYSQL_PASSWORD,
+  },
+  mysql: {
     // 单数据库信息配置
     client: {
       // host
@@ -55,36 +48,15 @@ module.exports = appInfo => {
     app: true,
     // 是否加载到 agent 上，默认关闭
     agent: false,
-  };
-  config.redis = {
+  },
+  redis: {
     client: {
       port: LOCAL_REDIS_PORT, // Redis port
       host: LOCAL_REDIS_HOST, // Redis host
       password: LOCAL_REDIS_PASSWORD,
       db: LOCAL_REDIS_DB,
     },
-  };
+  },
 
-  config.sessionRedis = {
-    enable: true,
-    package: 'egg-session-redis',
-  };
 
-  config.security = {
-    csrf: {
-      ignoreJSON: true, // 默认为 false，当设置为 true 时，将会放过所有 content-type 为 `application/json` 的请求
-    },
-  };
-
-  // add your user config here
-  const userConfig = {
-    // myAppName: 'egg',
-    appId: 'wxa951e094896c9b56',
-    appSecret: '259c84973e2ce4d217790fa1ad0d48d7',
-  };
-
-  return {
-    ...config,
-    ...userConfig,
-  };
 };

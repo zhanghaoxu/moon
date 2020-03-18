@@ -33,11 +33,9 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --title=egg-server-moon",
-    "stop": "egg-scripts stop --title=egg-server-moon",
-    
+    "start": "egg-scripts start --daemon --title=egg-server-moon",
+    "stop": "egg-scripts stop --title=egg-server-moon",  
     "dev": "egg-bin dev",
-    "local": "cross-env EGG_NODE_ENV=local && npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
