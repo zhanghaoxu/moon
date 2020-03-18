@@ -12,30 +12,30 @@ case "$CMD" in
 
   "dev-server" )
 
-    export EGG_NODE_ENV=dev-server
+    export EGG_SERVER_ENV=dev-server
     export NODE_ENV=production
-    exec npm start
+    exec npm start-in-docker
     ;;
 
   "test-server" )
 
-    export EGG_NODE_ENV=test-server
+    export EGG_SERVER_ENV=test-server
     export NODE_ENV=production
-    exec npm start
+    exec npm start-in-docker
     ;;
 
   "pre-server" )
-    export EGG_NODE_ENV=pre-server
+    export EGG_SERVER_ENV=pre-server
     export NODE_ENV=production
-    exec npm start
+    exec npm start-in-docker
     ;;
 
   "prod-server" )
     # we can modify files here, using ENV variables passed in
     # "docker create" command. It can't be done during build process.
-    export EGG_NODE_ENV=prod-server
+    export EGG_SERVER_ENV=prod-server
     export NODE_ENV=production
-    exec npm start
+    exec npm start-in-docker
     ;;
 
 esac
