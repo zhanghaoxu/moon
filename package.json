@@ -38,6 +38,7 @@
     "start": "egg-scripts start --daemon --title=egg-server-moon",
     "stop": "egg-scripts stop --title=egg-server-moon",
     "dev": "egg-bin dev",
+    "test-server":"cross-env EGG_SERVER_ENV=test-server npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
