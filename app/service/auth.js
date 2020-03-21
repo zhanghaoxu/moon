@@ -2,16 +2,16 @@
 // app/service/auth.js
 const Service = require('egg').Service;
 const crypto = require('crypto');
-const SESSION_KEY_PREFIX = 'moon:session:';
+const SESSION_PREFIX = 'moon:session:';
 class AuthService extends Service {
 
 
   async isRegister(openid) {
     // check cache
     try {
-      const cacheResult = await this.app.redis.get(`moon:user:isRegister:${openid}`);
+      const cacheResult = await this.ctx.service.authRedis.getIsRegisterCache(openid);
       if (cacheResult) {
-        return JSON.parse(cacheResult);
+        return cacheResult;
       }
     } catch (e) {
       console.log(e);
@@ -52,7 +52,7 @@ class AuthService extends Service {
       return key;
     }
     try {
-      await this.app.sessionStore.set(SESSION_KEY_PREFIX + key, {
+      await this.app.sessionStore.set(SESSION_PREFIX + key, {
         user,
         openid,
       }, maxAge);
@@ -67,7 +67,7 @@ class AuthService extends Service {
 
   async getSession(sessionHashKey) {
     try {
-      return await this.app.sessionStore.get(SESSION_KEY_PREFIX + sessionHashKey);
+      return await this.app.sessionStore.get(SESSION_PREFIX + sessionHashKey);
     } catch (e) {
       return null;
     }

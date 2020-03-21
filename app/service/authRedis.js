@@ -1,14 +1,13 @@
 'use strict';
 // app/service/auth.js
 const Service = require('egg').Service;
-const crypto = require('crypto');
-const SESSION_KEY_PREFIX = 'moon:session:';
-const IS_REGISTER_PREFIX = 'moon:user:isRegister:';
+const SESSION_KEY_PREFIX = 'moon:wechat:session:';
+
 class AuthRedisService extends Service {
 
   async getIsRegisterCache(openid) {
     try {
-      const cacheResult = await this.app.redis.get(IS_REGISTER_PREFIX + openid);
+      const cacheResult = await this.app.redis.get(SESSION_KEY_PREFIX + openid);
       if (cacheResult) {
         return JSON.parse(cacheResult);
       }
@@ -19,8 +18,10 @@ class AuthRedisService extends Service {
   }
 
   async setIsRegisterCache(openid, v) {
+
     try {
-      const result = await this.app.redis.set(IS_REGISTER_PREFIX + openid, v);
+      console.log(111);
+      const result = await this.app.redis.set(SESSION_KEY_PREFIX + openid, v);
       return result;
     } catch (e) {
       console.log(e);
@@ -28,27 +29,6 @@ class AuthRedisService extends Service {
     }
   }
 
-  async getSessionCache(userId) {
-    try {
-      const cacheResult = await this.app.redis.get(SESSION_KEY_PREFIX + userId);
-      if (cacheResult) {
-        return JSON.parse(cacheResult);
-      }
-    } catch (e) {
-      console.log(e);
-      return null;
-    }
-  }
-
-  async setSessionCache(userId, v) {
-    try {
-      const result = await this.app.redis.set(SESSION_KEY_PREFIX + userId, v);
-      return result;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  }
 
 }
 

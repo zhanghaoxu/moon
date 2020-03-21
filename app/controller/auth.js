@@ -26,7 +26,7 @@ class AuthController extends Controller {
       session = await this.ctx.service.auth.createSession(user);
       console.log(session);
       // 更新注册缓存 （不关心结果）
-      this.app.redis.set(`moon:user:isRegister:${openid}`, JSON.stringify(user));
+      this.ctx.service.authRedis.setIsRegisterCache(openid, JSON.stringify(user));
     }
 
     this.ctx.body = {
@@ -109,7 +109,7 @@ class AuthController extends Controller {
     // 生成session
     const key = await this.ctx.service.auth.createSession(user);
     // 更新注册缓存 （不关心结果）
-    this.app.redis.set(`moon:user:isRegister:${openid}`, user);
+    this.ctx.service.authRedis.setIsRegisterCache(openid, user);
     this.ctx.body = {
       code: 200,
       msg: '注册成功',

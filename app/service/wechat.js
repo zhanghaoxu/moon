@@ -23,7 +23,7 @@ class WechatService extends Service {
       };
       if (!result.data.errcode) {
         const { openid, session_key } = result.data;
-        this.app.redis.set(`moon:wehcat:${openid}:sessionKey`, session_key);
+        await this.ctx.service.wechatRedis.setSessionKeyCache(openid, session_key);
         return result.data;
       }
       // todo log error
@@ -50,7 +50,7 @@ class WechatService extends Service {
   }
 
   getSessionKeyByOpenid(openid) {
-    const sessionKey = this.app.redis.get(`moon:wechat:${openid}:sessionKey`);
+    const sessionKey = this.ctx.service.authRedis.getSessionCache(openid);
     return sessionKey;
   }
 
