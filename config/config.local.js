@@ -17,6 +17,11 @@ const LOCAL_REDIS_DB = 1;
 module.exports = {
 
   sequelize: localMysqlConfig,
+  alinode: {
+    // 从 `Node.js 性能平台` 获取对应的接入参数
+    appid: '84076',
+    secret: '935da5afc436672dda726f71420f805ee218dfbb',
+  },
   mysql: {
     // 单数据库信息配置
     client: {
@@ -44,6 +49,17 @@ module.exports = {
       db: LOCAL_REDIS_DB,
     },
   },
+  security: {
+    csrf: {
+      ignoreJSON: true, // 默认为 false，当设置为 true 时，将会放过所有 content-type 为 `application/json` 的请求
+    },
+  },
+
+  // add your user config here
+
+  // myAppName: 'egg',
+  appId: 'wxa951e094896c9b56',
+  appSecret: '259c84973e2ce4d217790fa1ad0d48d7',
 
 
 };
