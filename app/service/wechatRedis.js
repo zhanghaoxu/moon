@@ -2,24 +2,26 @@
 // app/service/auth.js
 const Service = require('egg').Service;
 
-const SESSION_KEY_PREFIX = 'moon:wechat:session:';
+const SESSION_KEY_PREFIX = 'moon:wechat:sessionKey:';
 class AuthRedisService extends Service {
 
-  async getSessionKeyCache(userId) {
+  async getSessionKeyCache(openid) {
     try {
-      const cacheResult = await this.app.redis.get(SESSION_KEY_PREFIX + userId);
+      const cacheResult = await this.app.redis.get(SESSION_KEY_PREFIX + openid);
       if (cacheResult) {
-        return JSON.parse(cacheResult);
+        return cacheResult;
       }
+      return null;
+
     } catch (e) {
       console.log(e);
       return null;
     }
   }
 
-  async setSessionKeyCache(userId, v) {
+  async setSessionKeyCache(openid, v) {
     try {
-      const result = await this.app.redis.set(SESSION_KEY_PREFIX + userId, v);
+      const result = await this.app.redis.set(SESSION_KEY_PREFIX + openid, v);
       return result;
     } catch (e) {
       console.log(e);
