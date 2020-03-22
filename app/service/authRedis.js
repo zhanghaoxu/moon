@@ -20,7 +20,6 @@ class AuthRedisService extends Service {
   async setIsRegisterCache(openid, v) {
 
     try {
-      console.log(111);
       const result = await this.app.redis.set(SESSION_KEY_PREFIX + openid, v);
       return result;
     } catch (e) {
