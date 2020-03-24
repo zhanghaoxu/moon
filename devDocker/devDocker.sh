@@ -9,8 +9,8 @@
 docker run -it --name redis-local \
  -p 6379:6379 \
  -d redis \
- -v /c/Users/zhanghaoxu/Desktop/project/moon/devDocker/redis-mount-dir/data:/data \
  redis-server --appendonly yes
+ #-v /c/Users/zhanghaoxu/Desktop/project/moon/devDocker/redis-mount-dir/data:/data \
  #--volumes-from redis-data \
 
 # docker 中下载 mysql
@@ -20,8 +20,8 @@ docker run -it --name redis-local \
 docker run -it --name mysql-local \
 -p 3306:3306  \
 -e MYSQL_ROOT_PASSWORD=123456  \
--v /c/Users/zhanghaoxu/Desktop/project/moon/devDocker/mysql-mount-dir:/var/lib/mysql  \
 -d zhanghaoxu/mysql-local
+#-v /c/Users/zhanghaoxu/Desktop/project/moon/devDocker/mysql-mount-dir:/var/lib/mysql  \
 #--volumes-from  mysql-data \
 
 
