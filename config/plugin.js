@@ -2,7 +2,7 @@
 
 /** @type Egg.EggPlugin */
 exports.alinode = {
-  enable: true,
+  enable: process.platform !== 'win32',
   package: 'egg-alinode',
 };
 exports.sequelize = {

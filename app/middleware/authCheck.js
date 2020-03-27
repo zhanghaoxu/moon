@@ -12,7 +12,7 @@ module.exports = options => {
         msg: '用户未登录',
         data: null,
       };
-      ctx.logger.error(new Error('用户未登录'));
+      ctx.logger.error('用户未登录');
       return;
     }
     ctx.sessionValue = sessionValue;
