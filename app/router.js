@@ -4,17 +4,18 @@
  * @param {Egg.Application} app - egg application
  */
 module.exports = app => {
-  const authCheck = app.middleware.authCheck();
+  const authCheck = app.middleware.authCheck(app.config.authCheck);
+  const platformCheck = app.middleware.platformCheck(app.config.platformCheck);
+
   const { router, controller } = app;
-  router.get('/', controller.home.index);
-  router.post('/', controller.home.index);
-  router.post('/auth/isRegister', controller.auth.isRegister);
 
-  router.post('/auth/register', controller.auth.register);
+  router.post('/auth/isRegister', platformCheck, controller.auth.isRegister);
 
-  router.post('/auth/isLogin', controller.auth.isLogin);
+  router.post('/auth/register', platformCheck, controller.auth.register);
 
-  router.post('/auth/login', controller.auth.login);
+  router.post('/auth/isLogin', platformCheck, controller.auth.isLogin);
+
+  router.post('/auth/login', platformCheck, controller.auth.login);
 
   router.post('/my/info', authCheck, controller.user.my);
 

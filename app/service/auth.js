@@ -6,10 +6,10 @@ const SESSION_PREFIX = 'moon:session:';
 class AuthService extends Service {
 
 
-  async isRegister(openid) {
+  async isRegister(account) {
     // check cache
     try {
-      const cacheResult = await this.ctx.service.authRedis.getIsRegisterCache(openid);
+      const cacheResult = await this.ctx.service.authRedis.getIsRegisterCache(account);
       if (cacheResult) {
         return cacheResult;
       }
@@ -17,8 +17,8 @@ class AuthService extends Service {
       console.log(e);
     }
 
-    const user = await this.ctx.service.users.findUserByOpenId(openid);
-    return user;
+    const accountItem = await this.ctx.service.accounts.findUserByOpenId(account);
+    return accountItem;
   }
 
   async isLogin(session) {
@@ -30,21 +30,21 @@ class AuthService extends Service {
 
   }
 
-  getSessionHashKey(openid) {
+  getSessionHashKey(account) {
     const hash = crypto.createHash('sha1');
-    hash.update(openid);
+    hash.update(account);
     return hash.digest('hex');
   }
 
-  async getSessionFromOpenid(openid) {
-    const sessionHashKey = this.ctx.service.auth.getSessionHashKey(openid);
+  async getSessionFromOpenid(account) {
+    const sessionHashKey = this.ctx.service.auth.getSessionHashKey(account);
     return this.ctx.service.auth.getSession(sessionHashKey);
   }
 
 
-  async createSession(user, maxAge = 120 * 24 * 60 * 60) {
-    const openid = user.wxOpenId;
-    const key = this.ctx.service.auth.getSessionHashKey(openid);
+  async createSession(accountItem, maxAge = 120 * 24 * 60 * 60) {
+    const account = accountItem.account;
+    const key = this.ctx.service.auth.getSessionHashKey(account);
 
     const oldSession = await this.ctx.service.auth.getSession(key);
     if (oldSession) {
@@ -53,8 +53,8 @@ class AuthService extends Service {
     }
     try {
       await this.app.sessionStore.set(SESSION_PREFIX + key, {
-        user,
-        openid,
+        accountItem,
+        account,
       }, maxAge);
 
       return key;

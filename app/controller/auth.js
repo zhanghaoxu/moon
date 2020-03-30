@@ -5,6 +5,19 @@ class AuthController extends Controller {
 
 
   async isRegister() {
+    const platform = this.ctx.header[this.app.config.platformCheck.key];
+    console.log('platform:', platform);
+    switch (platform) {
+      case 'app':
+        await this.isAppRegister();
+        break;
+      default:
+        await this.isMiniprogramRegister();
+    }
+
+  }
+
+  async isMiniprogramRegister() {
     const { code } = this.ctx.request.body;
     const wxInfo = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
     if (!wxInfo) {
@@ -38,9 +51,15 @@ class AuthController extends Controller {
     };
   }
 
+  async isAppRegister() {
+
+  }
+
   async isLogin() {
-    const { session } = this.ctx.request.body;
-    const isLogin = await this.ctx.service.auth.isLogin(session);
+    const sessionHashKey = this.ctx.request.header[this.app.config.authCheck.key];
+
+    const isLogin = await this.ctx.service.miniprogramAuth.isLogin(sessionHashKey);
+
     this.ctx.body = {
       code: 200,
       msg: '获取登陆状态成功',
@@ -48,7 +67,25 @@ class AuthController extends Controller {
     };
   }
 
+
   async login() {
+    const platform = this.ctx.request.header[this.app.config.platformCheck.key];
+
+    switch (platform) {
+      case 'app':
+        await this.loginApp();
+        break;
+      default:
+        await this.loginMiniProgram();
+
+    }
+  }
+
+  async loginApp() {
+
+  }
+
+  async loginMiniProgram() {
     const { code } = this.ctx.request.body;
     const { openid } = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
     const user = await this.ctx.service.users.findUserByOpenId(openid);
@@ -57,7 +94,7 @@ class AuthController extends Controller {
       this.ctx.body = getErrorResponseInfo(USER_NOT_REGISTER_CODE);
       return;
     }
-    const session = await this.ctx.service.auth.createSession(user);
+    const session = await this.ctx.service.miniprogramAuth.createSession(user);
     if (!session) {
       const { getErrorResponseInfo, CREATE_USER_SESSION_FAIL_CODE } = this.ctx.response.errorResponseInfo;
       this.ctx.body = getErrorResponseInfo(CREATE_USER_SESSION_FAIL_CODE);
@@ -71,7 +108,6 @@ class AuthController extends Controller {
         user,
       },
     };
-
   }
 
   async registerFromMiniProgram() {
@@ -105,7 +141,7 @@ class AuthController extends Controller {
       wxOpenId: openid,
     }));
     // 生成session
-    const key = await this.ctx.service.auth.createSession(user);
+    const key = await this.ctx.service.miniprogramAuth.createSession(user);
     // 更新注册缓存 （不关心结果）
     this.ctx.service.authRedis.setIsRegisterCache(openid, user);
     this.ctx.body = {
@@ -119,21 +155,21 @@ class AuthController extends Controller {
 
   }
 
+  async registerFromApp() {
+
+  }
+
   async register() {
 
-    const { registrationChannel } = this.ctx.request.body;
+    const platform = this.ctx.request.header[this.app.config.platformCheck.key];
 
-    switch (registrationChannel) {
-      case 'wechat_mini_program':
-        this.registerFromMiniProgram();
+    switch (platform) {
+      case 'app':
+        await this.registerFromApp();
         break;
       default:
+        await this.registerFromMiniProgram();
 
-        this.ctx.body = {
-          code: -1,
-          msg: '未知渠道',
-          data: null,
-        };
     }
 
   }

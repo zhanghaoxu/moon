@@ -10,16 +10,13 @@
 module.exports = options => {
   return async function authCheck(ctx, next) {
 
-    const sessionHashKey = ctx.request.header['moon-session'];
+    const sessionHashKey = ctx.request.header[options.key];
 
     const sessionValue = sessionHashKey && await ctx.service.auth.getSession(sessionHashKey);
 
     if (!sessionValue) {
-      ctx.body = {
-        code: -2,
-        msg: '用户未登录',
-        data: null,
-      };
+      const { getErrorResponseInfo, USER_NOT_LOGIN_CODE } = ctx.response.errorResponseInfo;
+      ctx.body = getErrorResponseInfo(USER_NOT_LOGIN_CODE);
       ctx.logger.error('用户登录校验失败，用户未登录');
       return;
     }

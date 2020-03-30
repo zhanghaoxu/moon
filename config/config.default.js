@@ -24,7 +24,13 @@ module.exports = appInfo => {
 
   // add your user config here
   const userConfig = {
-
+    platformCheck: {
+      key: 'moon-platform',
+      platforms: [ 'miniprogram', 'app' ],
+    },
+    authCheck: {
+      key: 'moon-session',
+    },
   };
 
 

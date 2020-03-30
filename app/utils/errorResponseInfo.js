@@ -7,6 +7,7 @@ const errorCode = [
   { name: 'USER_INFO_CHECK_FAIL_CODE', value: -5, msg: '用户未注册' },
   { name: 'WX_REQUEST_FAIL_CODE', value: -6, msg: '微信请求失败' },
   { name: 'PARAM_INVALID_FAIL_CODE', value: -7, msg: '参数错误' },
+  { name: 'PLATFORM_ERROR_CODE', value: -8, msg: '平台参数错误' },
 ];
 
 
