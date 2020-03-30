@@ -24,7 +24,6 @@ class AuthController extends Controller {
       // 生成session
 
       session = await this.ctx.service.auth.createSession(user);
-      console.log(session);
       // 更新注册缓存 （不关心结果）
       this.ctx.service.authRedis.setIsRegisterCache(openid, JSON.stringify(user));
     }
@@ -75,14 +74,13 @@ class AuthController extends Controller {
 
   }
 
-  async register() {
-
+  async registerFromMiniProgram() {
     const { userInfo, code, encryptedData, iv, rawData, signature } = this.ctx.request.body;
     // code 换取openid session_key
     const { openid, session_key } = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
     // 已注册
     const _user = await this.ctx.service.users.findUserByOpenId(openid);
-    console.log('111', _user);
+
     if (_user) {
       this.ctx.body = {
         code: -1,
@@ -118,6 +116,25 @@ class AuthController extends Controller {
         session: key,
       },
     };
+
+  }
+
+  async register() {
+
+    const { registrationChannel } = this.ctx.request.body;
+
+    switch (registrationChannel) {
+      case 'wechat_mini_program':
+        this.registerFromMiniProgram();
+        break;
+      default:
+
+        this.ctx.body = {
+          code: -1,
+          msg: '未知渠道',
+          data: null,
+        };
+    }
 
   }
 }
