@@ -6,7 +6,6 @@ class AuthController extends Controller {
 
   async isRegister() {
     const platform = this.ctx.header[this.app.config.platformCheck.key];
-    console.log('platform:', platform);
     switch (platform) {
       case 'app':
         await this.isAppRegister();
