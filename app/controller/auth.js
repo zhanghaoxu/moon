@@ -6,7 +6,6 @@ class AuthController extends Controller {
 
   async isRegister() {
     const platform = this.ctx.header[this.app.config.platformCheck.key];
-    console.log('platform:', platform);
     switch (platform) {
       case 'app':
         await this.isAppRegister();
@@ -19,32 +18,33 @@ class AuthController extends Controller {
 
   async isMiniprogramRegister() {
     const { code } = this.ctx.request.body;
-    const wxInfo = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
+    const wxInfo = await this.ctx.service.wechat.getUnionidAndUpdateSessionKey(code);
     if (!wxInfo) {
       const { getErrorResponseInfo, WX_REQUEST_FAIL_CODE } = this.ctx.response.errorResponseInfo;
       this.ctx.body = getErrorResponseInfo(WX_REQUEST_FAIL_CODE);
       return;
     }
-    const { openid } = wxInfo;
+    // 使用unionid作为账号注册
+    const account = wxInfo.unionid;
+    const userId = await this.ctx.service.auth.isRegister(account);
 
-    const user = await this.ctx.service.auth.isRegister(openid);
-
-    const isRegister = !!user;
     let session = null;
 
-    if (isRegister) {
+    if (userId) {
       // 更新用户的session maxAge
       // 生成session
 
-      session = await this.ctx.service.auth.createSession(user);
-      // 更新注册缓存 （不关心结果）
-      this.ctx.service.authRedis.setIsRegisterCache(openid, JSON.stringify(user));
+      session = await this.ctx.service.auth.createSession({
+        account,
+        userId,
+      });
+
     }
 
     this.ctx.body = {
       code: 200,
       data: {
-        isRegister,
+        isRegister: userId ? 1 : 0,
         session,
       },
       msg: '获取注册状态成功',
@@ -113,11 +113,12 @@ class AuthController extends Controller {
   async registerFromMiniProgram() {
     const { userInfo, code, encryptedData, iv, rawData, signature } = this.ctx.request.body;
     // code 换取openid session_key
-    const { openid, session_key } = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
+    const { unionid, openid, session_key } = await this.ctx.service.wechat.getUnionidAndUpdateSessionKey(code);
     // 已注册
-    const _user = await this.ctx.service.users.findUserByOpenId(openid);
+    const account = unionid;
+    let userId = await this.ctx.service.auth.isRegister(account);
 
-    if (_user) {
+    if (userId) {
       this.ctx.body = {
         code: -1,
         msg: '用户已注册',
@@ -132,26 +133,49 @@ class AuthController extends Controller {
         data: null,
         msg: '用户信息签名错误',
       };
+      return;
     }
 
     // 通过雪花算法 为用户生成唯一userId 方便以后进行数据库扩展
-    userInfo.userId = this.ctx.service.users.generateOrderIdForUser();
+    userId = this.ctx.service.users.generateOrderIdForUser();
+
+    const conn = await this.app.mysql.beginTransaction(); // 初始化事务
+
+    try {
+      const _account = {
+        userId,
+        account,
+      };
+      await this.ctx.service.accounts.create(Object.assign({}, _account, {
+
+        registractionChannel: 'miniprogram',
+
+      }));
+      const user = await this.ctx.service.users.create(Object.assign({}, userInfo, { userId }));
+
+
+      await conn.commit(); // 提交事务
+      // 生成session
+      const key = await this.ctx.service.auth.createSession(_account);
+      // 更新注册缓存 （不关心结果）
+      this.ctx.service.authRedis.setIsRegisterCache(account, userId);
+
+      this.ctx.body = {
+        code: 200,
+        msg: '注册成功',
+        data: {
+          user,
+          session: key,
+        },
+      };
+    } catch (err) {
+      // error, rollback
+      await conn.rollback(); // 一定记得捕获异常后回滚事务！！
+      throw err;
+    }
+    // don't commit or rollback by yourself
     // 插入用户表
-    const user = await this.ctx.service.users.create(Object.assign({}, userInfo, {
-      wxOpenId: openid,
-    }));
-    // 生成session
-    const key = await this.ctx.service.miniprogramAuth.createSession(user);
-    // 更新注册缓存 （不关心结果）
-    this.ctx.service.authRedis.setIsRegisterCache(openid, user);
-    this.ctx.body = {
-      code: 200,
-      msg: '注册成功',
-      data: {
-        user,
-        session: key,
-      },
-    };
+
 
   }
 

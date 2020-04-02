@@ -11,15 +11,16 @@ class AccountsService extends Service {
 
   /**
    * @return {Object} accountModel
-   * @param {String}} openid
+   * @param {String}} unionid
    */
 
-  async findAccountByOpenId(openid) {
+  async findRegistrationInfoByAccount(account) {
     // check redis
     try {
-      const cacheResult = await this.app.redis.get(`moon:account:isRegister:${openid}`);
+      const cacheResult = await this.ctx.service.authRedis.getIsRegisterCache(account);
+      console.log(cacheResult);
       if (cacheResult) {
-        return JSON.parse(cacheResult);
+        return cacheResult;
       }
 
     } catch (e) {
@@ -27,18 +28,25 @@ class AccountsService extends Service {
     }
 
     try {
-      const account = await this.findOne({
-        wxOpenId: openid,
+      const userId = await this.getUserIdByAccount({
+        account,
       });
-      if (account) {
-        this.app.redis.set(`moon:account:isRegister:${openid}`, JSON.stringify(account));
-        return account;
+      console.log('ddd:', userId);
+      if (userId) {
+        // 更新注册缓存 （不关心结果）
+        this.ctx.service.authRedis.setIsRegisterCache(account, userId);
+        return userId;
       }
 
-      return null;
+      this.ctx.service.authRedis.setIsRegisterCache(account, 0);
+
+      return 0;
+
+
     } catch (e) {
+      console.log(e);
       // todo log error
-      return null;
+      return 0;
     }
 
 
@@ -51,11 +59,26 @@ class AccountsService extends Service {
     return account;
   }
 
-  async findOne(account) {
-    account = await this.app.model.accounts.findOne({
+  async getUserIdByAccount(account) {
+    const { userId } = await this.app.model.Accounts.findOne({
+      attributes: [ 'userId' ],
       where: account,
     });
-    return account;
+    return userId;
+  }
+
+  async findOne(account) {
+    const accountItem = await this.app.model.accounts.findOne({
+      where: account,
+    });
+    return accountItem;
+  }
+
+  async hasOne(account) {
+    const result = await this.app.model.accounts.findOne({
+      where: account,
+    });
+    return result;
   }
 
   async findAll(account) {
@@ -73,16 +96,17 @@ class AccountsService extends Service {
     return result;
   }
 
-  generateOrderIdForAccount() {
-    const flakeBigInt = simpleflake();
-    return flakeBigInt.toString();
-  }
 
   async restore(account) {
     const result = await this.app.model.accounts.restore({
       where: account,
     });
     return result;
+  }
+
+  generateOrderIdForAccount() {
+    const flakeBigInt = simpleflake();
+    return flakeBigInt.toString();
   }
 
 }

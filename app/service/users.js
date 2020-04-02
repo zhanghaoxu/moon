@@ -52,6 +52,15 @@ class UsersService extends Service {
     return user;
   }
 
+  async findUserByUserId(userId) {
+    try {
+      return await this.findOne({ userId });
+    } catch (e) {
+      return null;
+    }
+
+  }
+
   async findOne(user) {
     user = await this.app.model.Users.findOne({
       where: user,

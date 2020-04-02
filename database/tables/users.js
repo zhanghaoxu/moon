@@ -4,11 +4,6 @@ const { BIGINT, DATE, STRING, TINYINT } = Sequelize;
 module.exports = {
   name: 'users',
   createSuccessCallback(queryInterface) {
-    queryInterface.addIndex('users', [ 'wx_open_id' ], {
-      name: 'idx_open_id',
-      using: 'BTREE',
-      unique: true,
-    });
     queryInterface.addIndex('users', [ 'user_id' ], {
       name: 'user_id',
       using: 'BTREE',
@@ -73,12 +68,6 @@ module.exports = {
       defaultValue: null,
       field: 'avatar_url',
       comment: '头像链接',
-    },
-    wxOpenId: {
-      type: STRING(64),
-      defaultValue: null,
-      field: 'wx_open_id',
-      comment: '用户微信openid',
     },
     moodDesc: {
       type: STRING(255),

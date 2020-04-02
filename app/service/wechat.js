@@ -7,7 +7,7 @@ class WechatService extends Service {
    * @return {Object} null/{openid,session_key}
    * @param {String} code
    */
-  async getOpenIdAndUpdateSessionKey(code) {
+  async getUnionidAndUpdateSessionKey(code) {
     // code 换取 openid sessionKey
     try {
       /* const result = await this.app.curl(`https://api.weixin.qq.com/sns/jscode2session?appid=${this.app.config.appId}&secret=${this.app.config.appSecret}&js_code=${code}&grant_type=authorization_code`, {
@@ -18,12 +18,13 @@ class WechatService extends Service {
           errcode: 0,
           session_key: 'rt8jcbbWbH4vxJtE+U17eQ==',
           openid: 'o8X0v5drhFVZ9sMOAr79HKn4HwOU',
+          unionid: 'o8X0v5drhFVZ9sMOAr79HKn4HwOU',
         },
 
       };
       if (!result.data.errcode) {
-        const { openid, session_key } = result.data;
-        await this.ctx.service.wechatRedis.setSessionKeyCache(openid, session_key);
+        const { openid, session_key, unionid } = result.data;
+        await this.ctx.service.wechatRedis.setSessionKeyCache(unionid, session_key);
         return result.data;
       }
       // todo log error

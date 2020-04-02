@@ -45,7 +45,8 @@ module.exports = {
     },
     registrationChannel: {
       type: STRING(32),
-      defaultValue: 'wechat_mini_program',
+      defaultValue: 'miniprogram',
+      field: 'registration_channel',
       comment: '注册渠道',
     },
     state: {
