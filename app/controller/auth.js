@@ -58,12 +58,11 @@ class AuthController extends Controller {
   async isLogin() {
     const sessionHashKey = this.ctx.request.header[this.app.config.authCheck.key];
 
-    const isLogin = await this.ctx.service.miniprogramAuth.isLogin(sessionHashKey);
-
+    const sessionValue = sessionHashKey && await this.ctx.service.auth.getSession(sessionHashKey);
     this.ctx.body = {
-      code: 200,
+      code: -2,
       msg: '获取登陆状态成功',
-      data: { isLogin },
+      data: sessionValue ? 1 : 0,
     };
   }
 
@@ -82,32 +81,40 @@ class AuthController extends Controller {
   }
 
   async loginApp() {
+    const { account, password } = this.ctx.request.body;
 
-  }
-
-  async loginMiniProgram() {
-    const { code } = this.ctx.request.body;
-    const { openid } = await this.ctx.service.wechat.getOpenIdAndUpdateSessionKey(code);
-    const user = await this.ctx.service.users.findUserByOpenId(openid);
-    if (!user) {
+    const userId = await this.ctx.service.auth.isRegister(account);
+    if (!userId) {
       const { getErrorResponseInfo, USER_NOT_REGISTER_CODE } = this.ctx.response.errorResponseInfo;
       this.ctx.body = getErrorResponseInfo(USER_NOT_REGISTER_CODE);
       return;
     }
-    const session = await this.ctx.service.miniprogramAuth.createSession(user);
-    if (!session) {
-      const { getErrorResponseInfo, CREATE_USER_SESSION_FAIL_CODE } = this.ctx.response.errorResponseInfo;
-      this.ctx.body = getErrorResponseInfo(CREATE_USER_SESSION_FAIL_CODE);
+
+    const checkPasswordResult = await this.ctx.service.accounts.checkPassword(password);
+    if (!checkPasswordResult) {
+      const { getErrorResponseInfo, ACCOUNT_OR_PASSWORD_ERROR_CODE } = this.ctx.response.errorResponseInfo;
+      this.ctx.body = getErrorResponseInfo(ACCOUNT_OR_PASSWORD_ERROR_CODE);
       return;
     }
+
+    const userToken = await this.ctx.service.auth.createSession({
+      account,
+      userId,
+    });
+
     this.ctx.body = {
       code: 200,
-      msg: '登陆成功',
+      msg: '注册成功',
       data: {
-        session,
-        user,
+        userToken,
       },
     };
+
+
+  }
+
+  async loginMiniProgram() {
+
   }
 
   async registerFromMiniProgram() {
@@ -119,20 +126,14 @@ class AuthController extends Controller {
     let userId = await this.ctx.service.auth.isRegister(account);
 
     if (userId) {
-      this.ctx.body = {
-        code: -1,
-        msg: '用户已注册',
-        data: null,
-      };
+      const { getErrorResponseInfo, USER_HAS_REGISTER_CODE } = this.ctx.response.errorResponseInfo;
+      this.ctx.body = getErrorResponseInfo(USER_HAS_REGISTER_CODE);
       return;
     }
     // 签名验证
     if (this.ctx.service.wechat.checkUserInfoSignature(rawData, signature, session_key)) {
-      this.ctx.body = {
-        code: -5,
-        data: null,
-        msg: '用户信息签名错误',
-      };
+      const { getErrorResponseInfo, USER_INFO_SIGN_ERROR_CODE } = this.ctx.response.errorResponseInfo;
+      this.ctx.body = getErrorResponseInfo(USER_INFO_SIGN_ERROR_CODE);
       return;
     }
 
@@ -188,11 +189,8 @@ class AuthController extends Controller {
     let userId = await this.ctx.service.auth.isRegister(email);
 
     if (userId) {
-      this.ctx.body = {
-        code: -1,
-        msg: '用户已注册',
-        data: null,
-      };
+      const { getErrorResponseInfo, USER_HAS_REGISTER_CODE } = this.ctx.response.errorResponseInfo;
+      this.ctx.body = getErrorResponseInfo(USER_HAS_REGISTER_CODE);
       return;
     }
 

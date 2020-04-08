@@ -9,6 +9,10 @@ class AccountsService extends Service {
     return account;
   }
 
+  async checkPassword(password) {
+    return 1;
+  }
+
   /**
    * @return {Object} accountModel
    * @param {String}} unionid
@@ -18,7 +22,7 @@ class AccountsService extends Service {
     // check redis
     try {
       const cacheResult = await this.ctx.service.authRedis.getIsRegisterCache(account);
-      console.log(cacheResult);
+
       if (cacheResult) {
         return cacheResult;
       }

@@ -8,6 +8,9 @@ const errorCode = [
   { name: 'WX_REQUEST_FAIL_CODE', value: -6, msg: '微信请求失败' },
   { name: 'PARAM_INVALID_FAIL_CODE', value: -7, msg: '参数错误' },
   { name: 'PLATFORM_ERROR_CODE', value: -8, msg: '平台参数错误' },
+  { name: 'USER_HAS_REGISTER_CODE', value: -9, msg: '用户已注册' },
+  { name: 'ACCOUNT_OR_PASSWORD_ERROR_CODE', value: -10, msg: '用户名或密码错误' },
+  { name: 'USER_INFO_SIGN_ERROR_CODE', value: -11, msg: '用户名或密码错误' },
 ];
 
 

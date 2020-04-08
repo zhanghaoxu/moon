@@ -6,8 +6,9 @@ class TodosController extends Controller {
     const { ctx } = this;
 
     const userId = ctx.sessionValue.userId;
+    console.log(userId);
     const todosAll = await ctx.service.todos.findAll(userId);
-
+    console.log(todosAll);
     ctx.body = {
       code: 200,
       msg: '获取成功',
