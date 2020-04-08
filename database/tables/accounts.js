@@ -43,6 +43,13 @@ module.exports = {
       field: 'account',
       comment: '第三方账号',
     },
+    password: {
+      type: STRING(64),
+      allowNull: true,
+      defaultValue: null,
+      field: 'password',
+      comment: '账号密码',
+    },
     registrationChannel: {
       type: STRING(32),
       defaultValue: 'miniprogram',

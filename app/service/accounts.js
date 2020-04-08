@@ -25,14 +25,15 @@ class AccountsService extends Service {
 
     } catch (e) {
       // todo log error
+      console.log(e);
     }
 
     try {
       const userId = await this.getUserIdByAccount({
         account,
       });
-      console.log('ddd:', userId);
       if (userId) {
+        console.log('userId:', userId);
         // 更新注册缓存 （不关心结果）
         this.ctx.service.authRedis.setIsRegisterCache(account, userId);
         return userId;
@@ -60,11 +61,14 @@ class AccountsService extends Service {
   }
 
   async getUserIdByAccount(account) {
-    const { userId } = await this.app.model.Accounts.findOne({
+    const accountInfo = await this.app.model.Accounts.findOne({
       attributes: [ 'userId' ],
       where: account,
     });
-    return userId;
+    if (accountInfo) {
+      return accountInfo.userId;
+    }
+    return 0;
   }
 
   async findOne(account) {

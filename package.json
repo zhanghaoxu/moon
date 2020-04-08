@@ -14,6 +14,7 @@
     "egg-scripts": "^2.11.0",
     "egg-sequelize": "^5.2.1",
     "egg-session": "^3.1.0",
+    "egg-validate": "^2.0.2",
     "mysql2": "^2.1.0",
     "simpleflakes": "^2.1.0"
   },
@@ -39,7 +40,7 @@
     "stop": "egg-scripts stop --title=egg-server-moon",
     "dev": "egg-bin dev",
     "local": "cross-env EGG_SERVER_ENV=local npm run dev",
-    "test-server":"cross-env EGG_SERVER_ENV=test-server npm run dev",
+    "test-server": "cross-env EGG_SERVER_ENV=test-server npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

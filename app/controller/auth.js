@@ -1,5 +1,5 @@
 'use strict';
-
+const getSha1HashString = require('../utils/util').getSha1HashString;
 const Controller = require('egg').Controller;
 class AuthController extends Controller {
 
@@ -148,7 +148,7 @@ class AuthController extends Controller {
       };
       await this.ctx.service.accounts.create(Object.assign({}, _account, {
 
-        registractionChannel: 'miniprogram',
+        registrationChannel: 'miniprogram',
 
       }));
       const user = await this.ctx.service.users.create(Object.assign({}, userInfo, { userId }));
@@ -180,6 +180,56 @@ class AuthController extends Controller {
   }
 
   async registerFromApp() {
+    const { nickName, email, password, repassword } = this.ctx.request.body;
+    console.log(this.ctx.request.body);
+    // todo params validate
+
+    // check email register or not
+    const accountHasRegistered = await this.ctx.service.auth.isRegister(email);
+
+    if (accountHasRegistered) {
+      this.ctx.body = {
+        code: -1,
+        msg: '用户已注册',
+        data: null,
+      };
+      return;
+    }
+
+    // 通过雪花算法 为用户生成唯一userId 方便以后进行数据库扩展
+    const userId = this.ctx.service.users.generateOrderIdForUser();
+    const conn = await this.app.mysql.beginTransaction(); // 初始化事务
+    const account = email;
+
+    try {
+      const _account = {
+        userId,
+        account,
+      };
+      await this.ctx.service.accounts.create(Object.assign({}, _account, {
+        password: getSha1HashString(password),
+        registrationChannel: 'app',
+      }));
+      await this.ctx.service.users.create(Object.assign({}, { nickName, userId }));
+
+
+      await conn.commit(); // 提交事务
+
+      // 更新注册缓存 （不关心结果）
+      this.ctx.service.authRedis.setIsRegisterCache(account, userId);
+
+      this.ctx.body = {
+        code: 200,
+        msg: '注册成功',
+        data: 1,
+      };
+      return;
+    } catch (err) {
+      console.log('catch error:', err);
+      // error, rollback
+      await conn.rollback(); // 一定记得捕获异常后回滚事务！！
+      throw err;
+    }
 
   }
 
