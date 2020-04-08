@@ -1,7 +1,8 @@
 'use strict';
 const crypto = require('crypto');
-const hash = crypto.createHash('sha1');
+
 function getSha1HashString(s) {
+  const hash = crypto.createHash('sha1');
   hash.update(s);
   return hash.digest('hex');
 }

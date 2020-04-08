@@ -185,9 +185,9 @@ class AuthController extends Controller {
     // todo params validate
 
     // check email register or not
-    const accountHasRegistered = await this.ctx.service.auth.isRegister(email);
+    let userId = await this.ctx.service.auth.isRegister(email);
 
-    if (accountHasRegistered) {
+    if (userId) {
       this.ctx.body = {
         code: -1,
         msg: '用户已注册',
@@ -197,7 +197,7 @@ class AuthController extends Controller {
     }
 
     // 通过雪花算法 为用户生成唯一userId 方便以后进行数据库扩展
-    const userId = this.ctx.service.users.generateOrderIdForUser();
+    userId = this.ctx.service.users.generateOrderIdForUser();
     const conn = await this.app.mysql.beginTransaction(); // 初始化事务
     const account = email;
 
