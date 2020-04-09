@@ -59,8 +59,9 @@ class AuthController extends Controller {
     const sessionHashKey = this.ctx.request.header[this.app.config.authCheck.key];
 
     const sessionValue = sessionHashKey && await this.ctx.service.auth.getSession(sessionHashKey);
+
     this.ctx.body = {
-      code: -2,
+      code: 200,
       msg: '获取登陆状态成功',
       data: sessionValue ? 1 : 0,
     };
