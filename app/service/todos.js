@@ -4,14 +4,14 @@ const Service = require('egg').Service;
 class TodosService extends Service {
 
   async create(todo) {
-    let result = false;
+    let result = null;
     const userId = todo.userId;
     try {
       todo.state = 0;
       todo = await this.app.model.Todos.create(todo);
 
       if (todo) {
-        result = true;
+        result = todo;
         // 更新缓存
         const cacheResult = await this.app.redis.get(`moon:user:todos:${userId}`);
         if (cacheResult) {

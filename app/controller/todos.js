@@ -73,19 +73,31 @@ class TodosController extends Controller {
   async add() {
     const { ctx } = this;
     const { name } = this.ctx.request.body;
+
     if (typeof name !== 'string' || name === '') {
       const { getErrorResponseInfo, PARAM_INVALID_FAIL_CODE } = this.ctx.response.errorResponseInfo;
       this.ctx.body = getErrorResponseInfo(PARAM_INVALID_FAIL_CODE);
+      console.log(this.ctx.body);
       return;
     }
+
+
     const userId = ctx.sessionValue.userId;
     const result = await ctx.service.todos.create({ name, userId });
+    if (result) {
+      ctx.body = {
+        code: 200,
+        msg: '添加成功',
+        data: result,
+      };
+    } else {
+      ctx.body = {
+        code: -1,
+        msg: '添加失败',
 
-    ctx.body = {
-      code: 200,
-      msg: '添加成功',
-      data: result,
-    };
+      };
+    }
+
 
   }
 

@@ -34,6 +34,7 @@ function getErrorResponseInfo(code, data = null) {
 }
 
 const errorCodeExportObject = {};
+
 errorCode.forEach(v => {
   errorCodeExportObject[v.name] = v.value;
 });
